@@ -8,9 +8,11 @@ type Screen = "hero" | "select" | "play";
 const Index = () => {
   const [screen, setScreen] = useState<Screen>("hero");
   const [gridSize, setGridSize] = useState(3);
+  const [startsFirst, setStartsFirst] = useState<"player" | "robot">("player");
 
-  const handleSelectGrid = (size: number) => {
+  const handleSelectGrid = (size: number, starter: "player" | "robot") => {
     setGridSize(size);
+    setStartsFirst(starter);
     setScreen("play");
   };
 
@@ -21,7 +23,7 @@ const Index = () => {
         <GridSelector onSelect={handleSelectGrid} onBack={() => setScreen("hero")} />
       )}
       {screen === "play" && (
-        <GameBoard size={gridSize} onBack={() => setScreen("select")} />
+        <GameBoard size={gridSize} startsFirst={startsFirst} onBack={() => setScreen("select")} />
       )}
     </div>
   );

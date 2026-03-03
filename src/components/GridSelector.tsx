@@ -1,7 +1,8 @@
-import { Grid3X3, ArrowLeft } from "lucide-react";
+import { Grid3X3, ArrowLeft, Bot, User } from "lucide-react";
+import { useState } from "react";
 
 interface GridSelectorProps {
-  onSelect: (size: number) => void;
+  onSelect: (size: number, startsFirst: "player" | "robot") => void;
   onBack: () => void;
 }
 
@@ -13,6 +14,8 @@ const gridOptions = [
 ];
 
 const GridSelector = ({ onSelect, onBack }: GridSelectorProps) => {
+  const [startsFirst, setStartsFirst] = useState<"player" | "robot">("player");
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
       <div className="animate-slide-up w-full max-w-3xl">
@@ -27,15 +30,44 @@ const GridSelector = ({ onSelect, onBack }: GridSelectorProps) => {
         <h2 className="text-4xl sm:text-5xl font-black mb-3 text-gradient">
           Choose Your Arena
         </h2>
-        <p className="text-muted-foreground mb-10 text-lg">
+        <p className="text-muted-foreground mb-8 text-lg">
           Select a grid size to begin your challenge.
         </p>
+
+        {/* Who starts first — segmented control */}
+        <div className="mb-10">
+          <p className="text-sm text-muted-foreground mb-3 font-medium tracking-wide uppercase">Who goes first?</p>
+          <div className="glass rounded-full p-1 inline-flex gap-1">
+            <button
+              onClick={() => setStartsFirst("player")}
+              className={`relative inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300
+                ${startsFirst === "player"
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                  : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <User className="w-4 h-4" />
+              <span>Player</span>
+            </button>
+            <button
+              onClick={() => setStartsFirst("robot")}
+              className={`relative inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300
+                ${startsFirst === "robot"
+                  ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                  : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <Bot className="w-4 h-4" />
+              <span>Robot</span>
+            </button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {gridOptions.map((opt, i) => (
             <button
               key={opt.size}
-              onClick={() => onSelect(opt.size)}
+              onClick={() => onSelect(opt.size, startsFirst)}
               className="group glass rounded-xl p-6 text-left transition-all duration-300
                 hover:border-primary/40 hover:bg-primary/5 hover:scale-105 active:scale-95
                 neon-glow-cyan"
