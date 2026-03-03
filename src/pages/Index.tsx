@@ -8,11 +8,13 @@ type Screen = "hero" | "select" | "play";
 const Index = () => {
   const [screen, setScreen] = useState<Screen>("hero");
   const [gridSize, setGridSize] = useState(3);
-  const [startsFirst, setStartsFirst] = useState<"player" | "robot">("player");
+  const [robotStarts, setRobotStarts] = useState(false);
 
-  const handleSelectGrid = (size: number, starter: "player" | "robot") => {
+  // Zde přijímáme tvé textové hodnoty "player" nebo "robot"
+  const handleSelectGrid = (size: number, startsFirst: "player" | "robot") => {
     setGridSize(size);
-    setStartsFirst(starter);
+    // Pokud je startsFirst "robot", nastavíme robotStarts na true
+    setRobotStarts(startsFirst === "robot");
     setScreen("play");
   };
 
@@ -23,7 +25,11 @@ const Index = () => {
         <GridSelector onSelect={handleSelectGrid} onBack={() => setScreen("hero")} />
       )}
       {screen === "play" && (
-        <GameBoard size={gridSize} startsFirst={startsFirst} onBack={() => setScreen("select")} />
+        <GameBoard 
+          size={gridSize} 
+          robotStarts={robotStarts} 
+          onBack={() => setScreen("select")} 
+        />
       )}
     </div>
   );
